@@ -1,0 +1,138 @@
+server:
+  port: 8081
+info:
+  contact:
+    email: zj18770988063@qq.com
+    phone: 18770988063
+    #http://localhost:8081/mappings  ,http://localhost:8081/bean
+
+
+
+spring:
+  profiles:
+  #active: local   激活Red配置文件
+    #本服务的注册到注册中心的别名
+  application:
+      name: service-member
+  boot:
+    admin:
+      client:
+        url: http://localhost:8888
+        username: root
+        password: root
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java #重启目录
+      exclude: WEB-INF/**
+  #    freemarker:
+  #      cache: false    #页面不加载缓存，修改即时生效
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/yx_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    password: root
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+
+      # 下面为连接池的补充设置，应用到上面所有数据源中
+      # 初始化大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters:  [stat,wall,log4j]
+
+      # 合并多个DruidDataSource的监控数据
+      #spring.datasource.useGlobalDataSourceStat=true
+      connection-properties:  [druid.stat.mergeSql=true,druid.stat.slowSqlMillis=5000]
+
+  redis:
+    database: 0 # Redis 数据库索引（默认为 0）
+    host: 172.20.130.143 # Redis 服务器地址
+    port: 6666 # Redis 服务器连接端口
+    password:  # Redis 服务器连接密码（默认为空）
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 8 # 连接池中的最大空闲连接 默认 8
+        min-idle: 0 # 连接池中的最小空闲连接 默认 0
+
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true  # Allow caching null values.
+      key-prefix: # Key prefix.
+      time-to-live: # 缓存到期时间，默认不主动删除永远不到期
+      use-key-prefix: true  # Whether to use the key prefix when writing to Redis.
+    #    spring.thymeleaf.cache=false　　　　//这个是关闭thymeleaf缓存
+    #    spring.thymeleaf.enabled = false
+
+  mvc:
+    view:
+      prefix: /static/
+      suffix: .html
+    static-path-pattern: /**
+  resources: # 指定静态资源的路径
+    static-locations: classpath:/static/
+    cache:
+      period: 0
+  mail:
+    username: zj18770988063@163.com
+    default-encoding: utf-8
+    password: WAMLIIKZTGGACJFG
+    host: smtp.163.com
+  rabbitmq:
+    host: 172.20.130.143   #rabbitmq服务器地址
+    username: guest
+    password: guest
+  #eureka:
+  #  instance:
+  #    hostname: localhost
+  #  client:
+  #    registerWithEureka: false
+  #    fetchRegistry: false
+  #    serviceUrl:
+  #      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  ###registerWithEureka 和 fetchRegistry 设置为false，表明自己属于服务中心主体
+
+  #http://192.168.1.136:15672连入消息队列管理网站
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.zhoujiang.baseprovider.domain
+  configuration:
+    useGeneratedKeys: true
+    useColumnLabel: true
+    mapUnderscoreToCamelCase: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #配置mybatis输出日志
+#debug: true
+eureka:
+  client:
+    #  注意！这里注册中心地址,要把服务注册到注册中心
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8888/eureka/
+  #本服务的端口号
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *

@@ -1,0 +1,27 @@
+eureka:
+  client:
+    #  注意！这里注册中心地址,要把服务注册到注册中心
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8888/eureka/
+  #本服务的端口号
+server:
+  port: 8082
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
+spring:
+  #本服务的注册到注册中心的别名
+  application:
+    name: service-order
+  boot:
+    admin:
+      client:
+        url: http://localhost:8888
+        username: root
+        password: root
+#  spring.boot.admin.client.url 指向我们服务端的项目接口路径。
+#  management.endpoints.web.exposure.include 表示将所有端口都暴露出来，可以被监控到。
+#  spring.application.name 表示改项目在spring-boot-admin 上的的显示名称。
+#  spring.boot.admin.client.username 和password 就是设置的用户名和密码了，这里需要注意的是，如果admin-server 中没有集成 security 的话，不用配置用户名和密码也可以注册进去，在服务端可以监控到，但如果admin-server 集成了security，就需要保证client 中配置的用户名和server 中配置的用户名密码保持一致。

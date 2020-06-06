@@ -1,0 +1,77 @@
+#端口号
+server:
+  port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        #        include: [info,health,beans,env,configprops,beans,dump,mappings,metrics,trace]
+
+        # info 节点        自定义配置信息 (必开)
+        # health节点       心跳监控节点   (必开)
+        # beans节点        bean装配信息可以在这里看到
+        # env节点          获取全部(系统)环境变量属性
+        # configprops节点  描述配置属性（包含默认值）如何注入Bean 程序的默认配置属性
+        # mappings节点     描述全部的URI路径，以及它们和控制器（包含Actuator端点）的映射关系
+        # metrics节点      报告各种应用程序度量信息，比如内存用量和HTTP请求计数 比如线程啥的 显示在Details上
+        #trace节点         提供基本的HTTP请求跟踪信息（时间戳、HTTP头等）
+        #shutdown节点      关闭应用程序，要求 endpoints.shutdown.enabled 设置为 true
+
+        #开启所有节点 不设置的话 默认开启 info 和 health端点
+        include: "*"
+        #忽略节点
+      #  exclude: [env,beans]
+      base-path: /  # 比较重要,默认 /actuator spring-boot-admin 扫描不到
+  #具体开启明细 可以看到redis db啥的
+  endpoint:
+    health:
+      show-details: always
+
+
+# info节点会显示一下 info 开头的内容
+info:
+  test: 001
+  test1: 002
+spring:
+  boot:
+    admin:
+     ui:
+      title: 服务监控中心
+
+
+  mvc:
+    view:
+      prefix: /static/
+      suffix: .html
+    static-path-pattern: /**
+  resources: # 指定静态资源的路径
+      static-locations: classpath:/static/
+      cache:
+        period: 0
+
+
+
+  security:
+    user:
+      name: root #登陆所需的账号密码
+      password: root
+eureka: #eureka配置
+  instance:
+    #注册中心ip地址
+    hostname: localhost
+    metadata-map:
+      user:
+        name: root
+        password: root
+    lease-renewal-interval-in-seconds: 10
+  client:
+    #是否注册到eureka
+    registerWithEureka: false
+    #是否检测服务信息
+    fetchRegistry: false
+    #注册地址
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    registry-fetch-interval-seconds: 5
+
+
